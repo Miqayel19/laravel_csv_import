@@ -29,8 +29,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application code
 COPY . /var/www
 
-#COPY .env.example .env
-
 # Install application dependencies
 RUN composer install --no-interaction --no-progress --prefer-dist
 

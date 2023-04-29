@@ -12,3 +12,4 @@ In a new shell
 - Run the database migrations with `docker-compose exec app php artisan migrate`
 - To seed some local users into the database run `docker-compose exec app php artisan db:seed`
     - This will add a user with the email `test@test.com` and password `kaktus1992` to your local database
+- Then you can open a localhost:8000 in your browser and see the application
