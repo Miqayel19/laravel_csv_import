@@ -1,0 +1,52 @@
+version: "3.7"
+services:
+    app:
+        build:
+            args:
+                user: user
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: csv-import
+        container_name: csv-import-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        depends_on:
+            - mysql
+        volumes:
+            - ./:/var/www
+        networks:
+            - csv-import
+
+    mysql:
+        image: mysql:latest
+        container_name: csv-import_mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: test_password
+            MYSQL_DATABASE: test_laravel
+            MYSQL_USER: test_username
+            MYSQL_PASSWORD: test_password
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./docker/mysql_data:/var/lib/mysql
+        networks:
+            - csv-import
+        restart: unless-stopped
+    nginx:
+        image: nginx:alpine
+        container_name: csv-import-nginx
+        restart: unless-stopped
+        ports:
+            - 8000:80
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx:/etc/nginx/conf.d/
+        networks:
+            - csv-import
+        depends_on:
+            - mysql
+networks:
+    csv-import:
+        driver: bridge
